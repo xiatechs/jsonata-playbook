@@ -1,4 +1,4 @@
-# jsonata playbook
+# jsonata playbook for go-jsonata 1.5.4
 
 [online playground](https://fern91.com/jsonata/)
 
