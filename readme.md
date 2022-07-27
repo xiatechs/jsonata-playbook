@@ -4,6 +4,8 @@
 
 [official documentation](https://docs.jsonata.org/overview.html)
 
+[open source library](https://github.com/blues/jsonata-go)
+
 ![](jsonatalogo.PNG) 
 
 this is a series of practical examples of go-jsonata. 
