@@ -4,7 +4,7 @@
 
 [official documentation](https://docs.jsonata.org/overview.html)
 
-![](jsonatalogo.png) 
+![](jsonatalogo.PNG) 
 
 this is a series of practical examples of jsonata. 
 the official documentation is helpful, but some of us 
