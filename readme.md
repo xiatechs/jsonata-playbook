@@ -4,9 +4,12 @@
 
 [official documentation](https://docs.jsonata.org/overview.html)
 
-this is a series of practical examples of jsonata. 
+![](jsonatalogo.PNG) 
+
+this is a series of practical examples of go-jsonata. 
 the official documentation is helpful, but some of us 
 want to see it being used with 'real' examples. 
+
 the purpose of this playbook is to provide a series of real 
 examples to demonstrate the power of jsonata in event based
 data transformation work.
