@@ -21,6 +21,7 @@ You can work your way down a json object via the usage of the . operator
 
 # JSONATA
 ```
+/* $$ means the 'root' of the entire JSON object */
 $$.Other.Misc
 ```
 
