@@ -4,7 +4,7 @@
 
 you can use various functions to get timestamps in jsonata.
 
-[https://docs.jsonata.org/date-time-functions](time docs for 1.8.0)
+[time docs for 1.8.0](https://docs.jsonata.org/date-time-functions)
 
 the one used in this example is $millis() which returns the number of milliseconds since
 unix epoch (1 January 1970 UTC).
