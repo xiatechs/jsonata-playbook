@@ -48,5 +48,7 @@ or for emitting data to flink or endpoints.
 
 11) [state](state.md)
 
+12) [time](time.md)
+
 if you want to add more examples please feel free to raise a PR
 - Tom
