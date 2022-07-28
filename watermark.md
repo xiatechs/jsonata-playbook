@@ -83,3 +83,6 @@ which - if used correctly - can take off cognitive load on systems
     "start": true
 }
 ```
+
+if you place the data back in as input, and play around with the data timestamp,
+you'll see the data being placed in the correct time bracket.
