@@ -74,3 +74,91 @@ $filter($$.Other, function($index){
 
 ```
 
+go-jsonata 1.5.4 does not yet have the '#' and '@' operators which enable useful functionalities such as JOIN.
+
+In the meantime, you can use filter to create join functions - this one is a simple 'full' join on one field in
+each object:
+
+# INPUT
+```
+{
+    "ids": [1,2,3],
+    "new": {
+        "additionalfeatures": [{
+                "colour": "blue",
+                "id": 1
+            },
+{
+                "colour": "red",
+                "id": 2
+            }
+        ],
+        "id": 1
+    },
+    "old": {
+        "id": 1,
+        "items": [{
+                "id": 1,
+                "name": "table"
+            }, {
+                "id": 2,
+                "name": "chair"
+            }
+        ]
+    }
+}
+```
+
+# JSONATA
+```
+(
+	$join := function($obj1, $obj2, $join1, $join2){
+      (
+      	$block1 := $filter($obj1, function($index1){
+             $index1.$join1 = $obj2.$join2
+        });
+        
+      	$block2 := $filter($obj2, function($index2){
+             $index2.$join2 = $obj1.$join1
+        });
+        
+        $append($block1, $block2)
+      )
+    };
+    
+    $join($$.old, $$.new, "id", "id")
+)
+```
+
+# OUTPUT
+```
+[
+    {
+        "id": 1,
+        "items": [
+            {
+                "id": 1,
+                "name": "table"
+            },
+            {
+                "id": 2,
+                "name": "chair"
+            }
+        ]
+    },
+    {
+        "additionalfeatures": [
+            {
+                "colour": "blue",
+                "id": 1
+            },
+            {
+                "colour": "red",
+                "id": 2
+            }
+        ],
+        "id": 1
+    }
+]
+
+```
