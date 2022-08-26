@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"embed"
@@ -19,10 +19,10 @@ import (
 //go:embed public
 var embeddedFiles embed.FS
 
-func main() {
+func Start() error {
 	fsys, err := fs.Sub(embeddedFiles, "public")
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	http.Handle("/", http.FileServer(http.FS(fsys)))
@@ -32,13 +32,20 @@ func main() {
 	log.Println("booting up server...")
 
 	if len(os.Args) > 1 {
-		log.Println(os.Args[1])
 		if os.Args[1] == "web" {
-			openBrowser("http://127.0.0.1:8050")
+			err = openBrowser("http://127.0.0.1:8050")
+			if err != nil {
+				return err
+			}
 		}
 	}
 
-	http.ListenAndServe(":8050", nil)
+	err = http.ListenAndServe(":8050", nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //open up browser/tab dependent on your OS.

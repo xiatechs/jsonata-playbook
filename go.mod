@@ -1,4 +1,4 @@
-module sveltego
+module github.com/xiatechs/jsonata-playbook
 
 go 1.18
 
