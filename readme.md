@@ -1,7 +1,9 @@
 # jsonata playbook for go-jsonata 1.5.4
 
+```
 to run the web-app locally just run 'make start' to boot up docker container
-and then go to 127.0.0.1:8050 on browser
+and then go to https://127.0.0.1:8050 on browser
+```
 
 [official documentation](https://docs.jsonata.org/overview.html)
 
