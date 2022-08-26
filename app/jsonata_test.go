@@ -14,17 +14,17 @@ func TestJsonata(t *testing.T) {
 	}{
 		{
 			jsonataCommand: `[$]`,
-			input:     `{"name": "Tam"}`,
+			input:          `{"name": "Tam"}`,
 			expectedOutput: "[\n {\n  \"name\": \"Tam\"\n }\n]",
 		},
 		{
 			jsonataCommand: `/* a comment */ [$]`,
-			input:     `{"name": "Tam"}`,
+			input:          `{"name": "Tam"}`,
 			expectedOutput: "[\n {\n  \"name\": \"Tam\"\n }\n]",
 		},
 		{
 			jsonataCommand: `/* a comment and also a weird field */ $.{ "niceField": $."number #" }`,
-			input:     `{"number #": "Tam"}`,
+			input:          `{"number #": "Tam"}`,
 			expectedOutput: "{\n \"niceField\": \"Tam\"\n}",
 		},
 	}

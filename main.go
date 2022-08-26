@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	
+
 	"github.com/xiatechs/jsonata-playbook/app"
 )
 
