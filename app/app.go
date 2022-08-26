@@ -19,6 +19,7 @@ import (
 //go:embed public
 var embeddedFiles embed.FS
 
+// Start the application
 func Start() error {
 	fsys, err := fs.Sub(embeddedFiles, "public")
 	if err != nil {
@@ -48,9 +49,8 @@ func Start() error {
 	return nil
 }
 
-//open up browser/tab dependent on your OS.
 func openBrowser(url string) (err error) {
-	switch runtime.GOOS { //open browser/tab dependent on what OS you are on
+	switch runtime.GOOS {
 	case "linux":
 		err = exec.Command("xdg-open", url).Start()
 	case "windows":
@@ -79,8 +79,7 @@ func jsonataRequest(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			fmt.Fprintf(w, err.Error())
-			json.NewEncoder(w).Encode(data)
+			_ = json.NewEncoder(w).Encode(data)
 			return
 		}
 
@@ -88,8 +87,7 @@ func jsonataRequest(w http.ResponseWriter, r *http.Request) {
 
 		err = json.Unmarshal(body, &data)
 		if err != nil {
-			fmt.Fprintf(w, err.Error())
-			json.NewEncoder(w).Encode(data)
+			_ = json.NewEncoder(w).Encode(data)
 			return
 		}
 
@@ -97,11 +95,11 @@ func jsonataRequest(w http.ResponseWriter, r *http.Request) {
 
 		data.Output = response
 
-		json.NewEncoder(w).Encode(data)
+		_ = json.NewEncoder(w).Encode(data)
 
 	default:
 		fmt.Fprintf(w, "Request type other than POST not supported")
-		json.NewEncoder(w).Encode(data)
+		_ = json.NewEncoder(w).Encode(data)
 	}
 }
 
