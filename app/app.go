@@ -8,10 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"os/exec"
 	"regexp"
-	"runtime"
 
 	jsonata "github.com/blues/jsonata-go"
 )
@@ -32,36 +29,12 @@ func Start() error {
 
 	log.Println("booting up server...")
 
-	if len(os.Args) > 1 {
-		if os.Args[1] == "web" {
-			err = openBrowser("http://127.0.0.1:8050")
-			if err != nil {
-				return err
-			}
-		}
-	}
-
 	err = http.ListenAndServe(":8050", nil)
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func openBrowser(url string) (err error) {
-	switch runtime.GOOS {
-	case "linux":
-		err = exec.Command("xdg-open", url).Start()
-	case "windows":
-		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
-	case "darwin":
-		err = exec.Command("open", url).Start()
-	default:
-		err = fmt.Errorf("unsupported platform????")
-	}
-
-	return
 }
 
 type request struct {
@@ -99,7 +72,6 @@ func jsonataRequest(w http.ResponseWriter, r *http.Request) {
 
 	default:
 		fmt.Fprintf(w, "Request type other than POST not supported")
-		_ = json.NewEncoder(w).Encode(data)
 	}
 }
 
