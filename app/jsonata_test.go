@@ -43,6 +43,7 @@ func TestJsonata(t *testing.T) {
 	}
 }
 
+//nolint: lll // long strings in tests are normal
 func TestHandler(t *testing.T) {
 	tests := []struct {
 		method         string
