@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	app.Endpoint = "127.0.0.1:7085"
+	app.SetEndpoint(":8050")
 	app.Start()
 }

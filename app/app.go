@@ -11,7 +11,11 @@ import (
 	jsonata "github.com/xiatechs/jsonata-go"
 )
 
-var Endpoint = "127.0.0.1:7085"
+var endpoint = "127.0.0.1:8050"
+
+func SetEndpoint(input string) {
+	endpoint = input
+}
 
 //PageVariables - GUI variables that change on webpages.
 type PageVariables struct {
@@ -88,8 +92,8 @@ func Start() {
 
 //LaunchServer starts up the server
 func launch() {
-	fmt.Println("Booting up server... - ", Endpoint)
-	err := http.ListenAndServe(Endpoint, nil) // setting listening port
+	fmt.Println("Booting up server... - ", endpoint)
+	err := http.ListenAndServe(endpoint, nil) // setting listening port
 	if err != nil {
 		fmt.Println(err)
 	}
