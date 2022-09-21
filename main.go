@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+	app.SetPrefix("")
 	app.SetEndpoint(":8050")
 	app.Start()
 }

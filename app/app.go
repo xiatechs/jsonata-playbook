@@ -12,11 +12,20 @@ import (
 	jsonata "github.com/xiatechs/jsonata-go"
 )
 
-var endpoint = ":8050"
+var (
+	endpoint = ":8050"
+	prefix   = ""
+)
 
 // SetEndpoint - set the endpoint for the app
 func SetEndpoint(input string) {
 	endpoint = input
+}
+
+// SetPrefix - set the prefix for the post request
+// i.e maybe you are using nginx and you have a prefix
+func SetPrefix(input string) {
+	prefix = input
 }
 
 type PageVariables struct {
@@ -143,7 +152,7 @@ func generateCSS() string {
 	`
 }
 
-var mapage = fmt.Sprintf(`<title>GO QL - Front-end SQL</title>
+var mapage = fmt.Sprintf(`<title>Go JSONATA</title>
 </head>
 
 <body>
@@ -151,7 +160,7 @@ var mapage = fmt.Sprintf(`<title>GO QL - Front-end SQL</title>
      %s   
     </style>
     <p id="title"><b>Go Jsonata Frontend</b></p>
-    <form action="/ui/process" method="POST">
+    <form action="%s/ui/process" method="POST">
 		<div id="text-boxes">
 				<textarea name="inputdata" >{{.Input}}</textarea>
 				<textarea name="jsonatadata" >{{.Jsonata}}</textarea>
@@ -165,7 +174,7 @@ var mapage = fmt.Sprintf(`<title>GO QL - Front-end SQL</title>
 	</form>
 	 <br/>
     <br>
-</body>`, generateCSS())
+</body>`, prefix, generateCSS())
 
 func processJsonata(input, jsonataString string) (output string) {
 	defer func() {
