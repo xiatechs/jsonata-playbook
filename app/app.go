@@ -1,79 +1,167 @@
 package app
 
 import (
-	"embed"
 	"encoding/json"
 	"fmt"
-	"io/fs"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
+	"text/template"
 
 	jsonata "github.com/xiatechs/jsonata-go"
 )
 
-//go:embed public
-var embeddedFiles embed.FS
+var Endpoint = "127.0.0.1:7085"
 
-// Start the application
-func Start() error {
-	fsys, err := fs.Sub(embeddedFiles, "public")
-	if err != nil {
-		return err
-	}
-
-	http.Handle("/", http.FileServer(http.FS(fsys)))
-
-	http.Handle("/jsonata", http.HandlerFunc(jsonataRequest))
-
-	log.Println("booting up server...")
-
-	err = http.ListenAndServe(":8050", nil)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-type request struct {
+//PageVariables - GUI variables that change on webpages.
+type PageVariables struct {
 	Input   string
 	Jsonata string
 	Output  string
 }
 
-func jsonataRequest(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*") // for CORS
-	data := request{}
+var globalVariables = PageVariables{}
 
-	switch r.Method {
-	case "POST":
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			_ = json.NewEncoder(w).Encode(data)
-			return
-		}
-
-		_ = r.Body.Close()
-
-		err = json.Unmarshal(body, &data)
-		if err != nil {
-			_ = json.NewEncoder(w).Encode(data)
-			return
-		}
-
-		response := processJsonata(data.Input, data.Jsonata)
-
-		data.Output = response
-
-		_ = json.NewEncoder(w).Encode(data)
-
-	default:
-		fmt.Fprintf(w, "Request type other than POST not supported")
+//Main page handler - the front page.
+func mainpage(w http.ResponseWriter, r *http.Request) {
+	t, err := template.New("mainpage").Parse(mapage)
+	if err != nil { // if there is an error
+		log.Print("template executing error: ", err) //log it
+	}
+	err2 := t.Execute(w, globalVariables)
+	if err2 != nil { // if there is an error
+		log.Print("template executing error: ", err) //log it
 	}
 }
+
+//validate the user input in the forms on the web page
+func validate(r *http.Request, item string) (string, bool) {
+	if len(r.Form[item]) != 0 && r.Form[item][0] != "" {
+		return r.Form[item][0], true
+	}
+	return "", false
+}
+
+//Function that handles displaying the results
+func start(w http.ResponseWriter, r *http.Request) {
+	t, err := template.New("mainpage").Parse(mapage)
+	if err != nil { // if there is an error
+		log.Print("template executing error: ", err) //log it
+	}
+
+	r.ParseForm()
+
+	submitName := r.FormValue("submit")
+	log.Println(submitName)
+
+	var ok1, ok2 bool
+
+	globalVariables.Input, ok1 = validate(r, "inputdata")
+
+	globalVariables.Jsonata, ok2 = validate(r, "jsonatadata")
+
+	if ok1 && ok2 {
+		switch submitName {
+		case "submitquery":
+			globalVariables.Output = processJsonata(globalVariables.Input, globalVariables.Jsonata)
+		}
+	}
+
+	if ok2 {
+		switch submitName {
+		case "escapequery":
+			globalVariables.Output = jsonEscape(globalVariables.Jsonata)
+		}
+	}
+
+	err = t.Execute(w, globalVariables)
+	if err != nil { // if there is an error
+		log.Print("template executing error: ", err) //log it
+	}
+}
+
+func Start() {
+	http.HandleFunc("/", mainpage)
+	http.HandleFunc("/ui/process", start)
+	launch()
+}
+
+//LaunchServer starts up the server
+func launch() {
+	fmt.Println("Booting up server... - ", Endpoint)
+	err := http.ListenAndServe(Endpoint, nil) // setting listening port
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func generateCSS() string {
+	return `
+	body {
+		background: #e5e5e5;
+	}
+	
+	#title {
+		color: #14213d;
+		font-size: 30px;
+		text-align: center;
+		text-decoration: underline;
+		text-decoration-color: #fca311;
+
+	}
+
+	#text-boxes {
+		display: flex;
+		justify-content: space-around;
+	}
+	
+	textarea {
+		height: 500px;
+		width: 600px;
+		border: solid 3px #14213d;
+	}
+	
+	#btns {
+		display: flex;
+		justify-content: space-around;
+		margin-top: 50px;
+		
+	}
+
+	button {
+		padding: 20px;
+		background: #14213d;
+		color: #fca311;
+		font-weight: bold;
+		border: solid 4px #fca311;
+		border-radius: 15px;
+	}
+	`
+}
+
+var mapage = fmt.Sprintf(`<title>GO QL - Front-end SQL</title>
+</head>
+
+<body>
+    <style>
+     %s   
+    </style>
+    <p id="title"><b>Go Jsonata Frontend</b></p>
+    <form action="/ui/process" method="POST">
+		<div id="text-boxes">
+				<textarea name="inputdata" >{{.Input}}</textarea>
+				<textarea name="jsonatadata" >{{.Jsonata}}</textarea>
+				<textarea name="outputdata" >{{.Output}}</textarea>
+		</div>
+
+		<div id="btns">
+				<button type="submit" value="submitquery" name="submit">Submit Jsonata Query</button>
+				<button type="submit" value="escapequery" name="submit">Escape Jsonata Query</button>
+		</div>
+	</form>
+	 <br/>
+    <br>
+</body>`, generateCSS())
 
 func processJsonata(input, jsonataString string) (output string) {
 	defer func() {
@@ -102,6 +190,15 @@ func processJsonata(input, jsonataString string) (output string) {
 	str, _ := json.MarshalIndent(res, "", " ")
 
 	return string(str)
+}
+
+func jsonEscape(i string) string {
+	b, err := json.Marshal(i)
+	if err != nil {
+		panic(err)
+	}
+	// Trim the beginning and trailing " character
+	return string(b[1 : len(b)-1])
 }
 
 /*

@@ -1,14 +1,10 @@
 package main
 
 import (
-	"log"
-
 	"github.com/xiatechs/jsonata-playbook/app"
 )
 
 func main() {
-	err := app.Start()
-	if err != nil {
-		log.Fatal(err)
-	}
+	app.Endpoint = "127.0.0.1:7085"
+	app.Start()
 }
