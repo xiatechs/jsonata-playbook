@@ -7,7 +7,9 @@ and then go to https://127.0.0.1:8050 on browser
 
 [official documentation](https://docs.jsonata.org/overview.html)
 
-[open source library](https://github.com/blues/jsonata-go)
+[open source library - xiatech fork](https://github.com/xiatechs/jsonata-go)
+
+[online playground!](https://fern91.com/js/)
 
 ![](jsonatalogo.PNG) 
 
