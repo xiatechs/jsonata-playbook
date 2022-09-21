@@ -25,12 +25,15 @@ type PageVariables struct {
 	Output  string
 }
 
-var globalVariables = PageVariables{}
-
 func mainpage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("mainpage").Parse(mapage)
 	if err != nil {
 		log.Print("template executing error: ", err)
+	}
+	globalVariables := PageVariables{
+		Input:   `{"An": "Example Json Blob"}`,
+		Jsonata: `$$.An`,
+		Output:  `"Example Json Blob"`,
 	}
 	err2 := t.Execute(w, globalVariables)
 	if err2 != nil {
@@ -57,6 +60,8 @@ func start(w http.ResponseWriter, r *http.Request) {
 	log.Println(submitName)
 
 	var ok1, ok2 bool
+
+	globalVariables := PageVariables{}
 
 	globalVariables.Input, ok1 = validate(r, "inputdata")
 
