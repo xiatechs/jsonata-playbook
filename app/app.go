@@ -1,3 +1,4 @@
+//nolint: misspell // html is america land
 package app
 
 import (
@@ -28,12 +29,12 @@ var globalVariables = PageVariables{}
 
 func mainpage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("mainpage").Parse(mapage)
-	if err != nil { // if there is an error
-		log.Print("template executing error: ", err) //log it
+	if err != nil {
+		log.Print("template executing error: ", err)
 	}
 	err2 := t.Execute(w, globalVariables)
-	if err2 != nil { // if there is an error
-		log.Print("template executing error: ", err) //log it
+	if err2 != nil {
+		log.Print("template executing error: ", err)
 	}
 }
 
@@ -46,8 +47,8 @@ func validate(r *http.Request, item string) (string, bool) {
 
 func start(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("mainpage").Parse(mapage)
-	if err != nil { // if there is an error
-		log.Print("template executing error: ", err) //log it
+	if err != nil {
+		log.Print("template executing error: ", err)
 	}
 
 	_ = r.ParseForm()
@@ -74,8 +75,8 @@ func start(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.Execute(w, globalVariables)
-	if err != nil { // if there is an error
-		log.Print("template executing error: ", err) //log it
+	if err != nil {
+		log.Print("template executing error: ", err)
 	}
 }
 
@@ -87,7 +88,7 @@ func Start() {
 
 func launch() {
 	fmt.Println("Booting up server... - ", endpoint)
-	err := http.ListenAndServe(endpoint, nil) // setting listening port
+	err := http.ListenAndServe(endpoint, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
