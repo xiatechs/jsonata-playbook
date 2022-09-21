@@ -11,13 +11,13 @@ import (
 	jsonata "github.com/xiatechs/jsonata-go"
 )
 
-var endpoint = "127.0.0.1:8050"
+var endpoint = ":8050"
 
+// SetEndpoint - set the endpoint for the app
 func SetEndpoint(input string) {
 	endpoint = input
 }
 
-//PageVariables - GUI variables that change on webpages.
 type PageVariables struct {
 	Input   string
 	Jsonata string
@@ -26,7 +26,6 @@ type PageVariables struct {
 
 var globalVariables = PageVariables{}
 
-//Main page handler - the front page.
 func mainpage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("mainpage").Parse(mapage)
 	if err != nil { // if there is an error
@@ -38,7 +37,6 @@ func mainpage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//validate the user input in the forms on the web page
 func validate(r *http.Request, item string) (string, bool) {
 	if len(r.Form[item]) != 0 && r.Form[item][0] != "" {
 		return r.Form[item][0], true
@@ -46,14 +44,13 @@ func validate(r *http.Request, item string) (string, bool) {
 	return "", false
 }
 
-//Function that handles displaying the results
 func start(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("mainpage").Parse(mapage)
 	if err != nil { // if there is an error
 		log.Print("template executing error: ", err) //log it
 	}
 
-	r.ParseForm()
+	_ = r.ParseForm()
 
 	submitName := r.FormValue("submit")
 	log.Println(submitName)
@@ -65,15 +62,13 @@ func start(w http.ResponseWriter, r *http.Request) {
 	globalVariables.Jsonata, ok2 = validate(r, "jsonatadata")
 
 	if ok1 && ok2 {
-		switch submitName {
-		case "submitquery":
+		if submitName == "submitquery" {
 			globalVariables.Output = processJsonata(globalVariables.Input, globalVariables.Jsonata)
 		}
 	}
 
 	if ok2 {
-		switch submitName {
-		case "escapequery":
+		if submitName == "escapequery" {
 			globalVariables.Output = jsonEscape(globalVariables.Jsonata)
 		}
 	}
@@ -90,7 +85,6 @@ func Start() {
 	launch()
 }
 
-//LaunchServer starts up the server
 func launch() {
 	fmt.Println("Booting up server... - ", endpoint)
 	err := http.ListenAndServe(endpoint, nil) // setting listening port
