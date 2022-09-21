@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"regexp"
 
-	jsonata "github.com/blues/jsonata-go"
+	jsonata "github.com/xiatechs/jsonata-go"
 )
 
 //go:embed public
