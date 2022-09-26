@@ -175,7 +175,7 @@ func mapage() string {
 	</form>
 	 <br/>
     <br>
-</body>`, prefix, generateCSS())
+</body>`, generateCSS(), prefix)
 }
 
 func processJsonata(input, jsonataString string) (output string) {
