@@ -39,23 +39,25 @@ or for emitting data to flink or endpoints.
 
 5) [functions](functions.md)
 
-6) [map](map.md)
+6) [additional functions](additional.md)
 
-7) [filter](filter.md)
+7) [map](map.md)
 
-8) [reduce](reduce.md)
+8) [filter](filter.md)
 
-9) [composition](composition.md)
+9) [reduce](reduce.md)
 
-10) [errors](errors.md)
+10) [composition](composition.md)
 
-11) [transformation](transformation.md)
+11) [errors](errors.md)
 
-12) [state](state.md)
+12) [transformation](transformation.md)
 
-13) [time](time.md)
+13) [state](state.md)
 
-14) [stateless watermarking](watermark.md)
+14) [time](time.md)
+
+15) [stateless watermarking](watermark.md)
 
 if you want to add more examples please feel free to raise a PR
 - Tom
