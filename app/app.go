@@ -35,7 +35,7 @@ type PageVariables struct {
 }
 
 func mainpage(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("mainpage").Parse(mapage)
+	t, err := template.New("mainpage").Parse(mapage())
 	if err != nil {
 		log.Print("template executing error: ", err)
 	}
@@ -58,7 +58,7 @@ func validate(r *http.Request, item string) (string, bool) {
 }
 
 func start(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("mainpage").Parse(mapage)
+	t, err := template.New("mainpage").Parse(mapage())
 	if err != nil {
 		log.Print("template executing error: ", err)
 	}
@@ -152,7 +152,8 @@ func generateCSS() string {
 	`
 }
 
-var mapage = fmt.Sprintf(`<title>Go JSONATA</title>
+func mapage() string {
+	return fmt.Sprintf(`<title>Go JSONATA</title>
 </head>
 
 <body>
@@ -174,7 +175,8 @@ var mapage = fmt.Sprintf(`<title>Go JSONATA</title>
 	</form>
 	 <br/>
     <br>
-</body>`, prefix, generateCSS())
+</body>`, generateCSS(), prefix)
+}
 
 func processJsonata(input, jsonataString string) (output string) {
 	defer func() {
