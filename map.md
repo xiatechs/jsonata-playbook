@@ -80,3 +80,61 @@ $map($$, function($v, $i, $a) {
 ]
 
 ```
+
+Here's a more sophisticated example:
+
+# INPUT
+```
+{
+ "top": {
+    "array": [
+      {
+        "jim": "jones"
+      }
+    ]
+   }
+}
+```
+
+# JSONATA
+```
+( 
+$mapfunc := function($z){$map($z, function($v, $i, $a) {
+
+	$v.$keys().{
+    "needsunescape": $type($lookup($v, $[0])) = "array" ? 1 : $type($lookup($v, $[0])) = "object" ? 1 : 0,
+    "value": $string($lookup($v, $[0])), 
+    "key": $[0],
+    "type": $type($lookup($v, $[0]))}
+})};
+
+$topmapfunc := function($z){ $mapfunc($z)[0].{
+	  "key": $.key,
+      "value": $.needsunescape = 1 ? $topmapfunc($unescape($.value)) : $.value,
+      "type": $.type
+}};
+
+{
+	"fully-denormalised-data": $topmapfunc($$)
+}
+)
+```
+
+# OUTPUT
+```
+{
+    "fully-denormalised-data": {
+        "key": "top",
+        "type": "object",
+        "value": {
+            "key": "array",
+            "type": "array",
+            "value": {
+                "key": "jim",
+                "type": "string",
+                "value": "jones"
+            }
+        }
+    }
+}
+```
